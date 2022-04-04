@@ -11,7 +11,7 @@ import {
   HomeOutlined,
   DatabaseOutlined,
   TeamOutlined,
-  ThunderboltOutlined,
+  // ThunderboltOutlined,
   LockOutlined,
   ArrowLeftOutlined
 } from "@ant-design/icons";
@@ -25,7 +25,8 @@ import ResourcePage from "./ResourcePage";
 import RegisterPage from "./RegisterPage";
 import JoinPage from "./JoinPage";
 import ManagePage from "./ManagePage";
-import BattlePage from "./BattlePage";
+// import BattlePage from "./BattlePage";
+import ManageContestPage from "./ManageContestPage";
 import NotFoundPage from "../NotFoundPage";
 // hasura查询
 import { useQuery } from "@apollo/client";
@@ -36,11 +37,6 @@ import {
 } from "../../api/contest.graphql"
 //学长写好的api，用以没登陆会跳转到登陆页面
 import AuthRoute from "../../components/AuthRoute";
-import dayjs, {Dayjs} from "dayjs";
-
-var utc = require('dayjs/plugin/utc');
-dayjs.extend(utc);
-
 //antd部件实例化
 const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
@@ -49,7 +45,6 @@ const rootSubmenuKeys = ["sub1", "sub2"];
 //react页面标准写法
 const MenuPage: React.FC = () => {
   const userInfo = getUserInfo();
-  console.log(userInfo);
 
   //url
   const { path, url } = useRouteMatch();
@@ -93,11 +88,6 @@ const MenuPage: React.FC = () => {
 
   var Contest_name = ContestData?.contest.length === 1 ? ContestData?.contest[0].contest_name : "null"
   var Contest_type = ContestData?.contest.length === 1 ? ContestData?.contest[0].contest_type : "null"
-  // const endDate = ContestData?.contest[0].end_date;
-  // const startDate = ContestData?.contest[0].start_date;
-  // const state = dayjs(endDate).isAfter(dayjs().format()) ? (dayjs(startDate).isBefore(dayjs().format()) ? "正在进行" : "未开始") : "已结束";
-  // const Contest_status = React.createContext('正在进行');  // 比赛的默认值是正在进行
-
 
   //小子分页
   const [openKeys, setOpenKeys] = React.useState(["sub1"]);
@@ -149,10 +139,10 @@ const MenuPage: React.FC = () => {
               <Link to={`${url}/manage`}>管理</Link>
             </Menu.Item>
           </SubMenu>
-          <Menu.Item key="fight">
+          {/* <Menu.Item key="fight">
             <ThunderboltOutlined />
             <Link to={`${url}/battle`}>对战</Link>
-          </Menu.Item>
+          </Menu.Item> */}
 
           {(["root", "counselor"].includes(userInfo?.role!) || isContestManagerData?.contest_manager.length === 1) ? (
             <SubMenu
@@ -164,9 +154,9 @@ const MenuPage: React.FC = () => {
                 </span>
               }
             >
-              {/*<Menu.Item key="updateIntro">
-                <Link to={`${url}/updateIntro`}>修改介绍</Link>
-            </Menu.Item>*/}
+              <Menu.Item key="manageContest">
+                <Link to={`${url}/manageContest`}>管理比赛</Link>
+              </Menu.Item>
             </SubMenu>
           ) : null}
         </Menu>
@@ -196,7 +186,6 @@ const MenuPage: React.FC = () => {
             </Link>
           </Col>
         </Row>
-        {/* <Contest_status.Provider value = {state}> */}
         <Switch>
           <Route exact path={path}>
             <IntroPage />
@@ -216,17 +205,16 @@ const MenuPage: React.FC = () => {
           <AuthRoute exact path={`${path}/manage`}>
             <ManagePage />
           </AuthRoute>
-          <AuthRoute exact path={`${path}/battle`}>
+          {/* <Route exact path={`${path}/battle`}>
             <BattlePage />
+          </Route> */}
+          <AuthRoute exact path={`${path}/manageContest`}>
+            <ManageContestPage />
           </AuthRoute>
-          {/* <AuthRoute exact path={`${path}/updateIntro`}>
-            <UpdateIntroPage />
-          </AuthRoute> */}
           <AuthRoute>
             <NotFoundPage />
           </AuthRoute>
         </Switch>
-        {/* </Contest_status.Provider> */}
       </Content>
     </Layout>
   );
